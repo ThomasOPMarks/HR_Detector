@@ -3,7 +3,6 @@ package com.example.hr_detector;
 import android.hardware.SensorEventListener;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
-import android.telephony.mbms.MbmsErrors;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
@@ -19,9 +18,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     private TextView sTextView;
     private TextView cTextView;
-    private int target_heart_rate;
+    private int targetHeartRate;
     private int numClicked;
-    private int current_heart_rate;
+    private int currentHeartRate;
     private SensorManager mSensorManager;
     private Sensor mHeartRateSensor;
 
@@ -31,9 +30,9 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         setContentView(R.layout.activity_main);
 
         //Initialize all values to 0
-        target_heart_rate = 0;
+        targetHeartRate = 0;
         numClicked = 0;
-        current_heart_rate = 0;
+        currentHeartRate = 0;
 
         //Set text views, one to display target HR and the other to display current HR
         sTextView = (TextView) findViewById(R.id.selectHR);
@@ -61,7 +60,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                target_heart_rate = newVal;
+                targetHeartRate = newVal;
             }
         });
 
@@ -71,7 +70,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             public void onClick(View v) {
                 //If the user has clicked here, the target HR is set up, show current HR
                 if(numClicked == 0){
-                    sTextView.setText("Target Heart Rate: " + target_heart_rate);
+                    sTextView.setText("Target Heart Rate: " + targetHeartRate);
                     cTextView.setVisibility(v.VISIBLE);
                     np.setVisibility(v.INVISIBLE);
                     next.setText("BACK");
@@ -122,15 +121,15 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         if(event.sensor.getType() == Sensor.TYPE_HEART_RATE)
         {
             String msg = "" + (int)event.values[0];
-            current_heart_rate = (int) event.values[0];
-            sTextView.setText("Target Heart Rate: " + target_heart_rate);
-            cTextView.setText("Current Heart Rate: " + current_heart_rate);
+            currentHeartRate = (int) event.values[0];
+            sTextView.setText("Target Heart Rate: " + targetHeartRate);
+            cTextView.setText("Current Heart Rate: " + currentHeartRate);
             sTextView.setVisibility(View.VISIBLE);
             cTextView.setVisibility(View.VISIBLE);
-            if (current_heart_rate >= target_heart_rate) { //Target HR has been achieved
+            if (currentHeartRate >= targetHeartRate) { //Target HR has been achieved
                 //Display message showing Target HR is reached, in the future send signal for Bluno to turn on
                 cTextView.setText("Signal bluetooth device that the mood has been achieved!!");
-                current_heart_rate = 0;
+                currentHeartRate = 0;
                 //Turn off HR monitor to save battery
                 mSensorManager.unregisterListener(this,mHeartRateSensor);
             }
