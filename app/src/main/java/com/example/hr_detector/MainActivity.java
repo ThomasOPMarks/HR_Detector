@@ -35,8 +35,8 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         currentHeartRate = 0;
 
         //Set text views, one to display target HR and the other to display current HR
-        sTextView = (TextView) findViewById(R.id.selectHR);
-        cTextView = (TextView) findViewById(R.id.current);
+        sTextView = findViewById(R.id.selectHR);
+        cTextView = findViewById(R.id.current);
 
         //Initialize text to display current HR and set to invisible
         cTextView.setText("Current Heart Rate: ...");
@@ -52,7 +52,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 1);
 
         //Initialize number picker with values from 40 to 180
-        final NumberPicker np = (NumberPicker) findViewById(R.id.number_picker);
+        final NumberPicker np = findViewById(R.id.number_picker);
         np.setMinValue(40);
         np.setMaxValue(180);
 
@@ -71,15 +71,16 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 //If the user has clicked here, the target HR is set up, show current HR
                 if(numClicked == 0){
                     sTextView.setText("Target Heart Rate: " + targetHeartRate);
-                    cTextView.setVisibility(v.VISIBLE);
-                    np.setVisibility(v.INVISIBLE);
+                    cTextView.setVisibility(View.VISIBLE);
+                    np.setVisibility(View.INVISIBLE);
                     next.setText("BACK");
                     numClicked++;
                 //If the user has clicked again, go back to first screen to display number picker
                 } else{
-                    cTextView.setVisibility(v.INVISIBLE);
+                    cTextView.setVisibility(View.INVISIBLE);
+
                     //cTextView.setText("Current Heart Rate: ...");
-                    np.setVisibility(v.VISIBLE);
+                    np.setVisibility(View.VISIBLE);
                     sTextView.setText("Select Heart Rate");
                     next.setText("NEXT");
                     numClicked--;
@@ -120,7 +121,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
         if(event.sensor.getType() == Sensor.TYPE_HEART_RATE)
         {
-            String msg = "" + (int)event.values[0];
+            //String msg = "" + (int)event.values[0];
             currentHeartRate = (int) event.values[0];
             sTextView.setText("Target Heart Rate: " + targetHeartRate);
             cTextView.setText("Current Heart Rate: " + currentHeartRate);
