@@ -78,8 +78,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                 //If the user has clicked again, go back to first screen to display number picker
                 } else{
                     cTextView.setVisibility(View.INVISIBLE);
-
-                    //cTextView.setText("Current Heart Rate: ...");
                     np.setVisibility(View.VISIBLE);
                     sTextView.setText("Select Heart Rate");
                     next.setText("NEXT");
@@ -98,18 +96,16 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         Log.i("got event", "onRequestPermissionsResult: " + requestCode);
 
-        switch (requestCode) {
-            case 1:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //granted
-                    Log.i("permsGranted", "we have permission registering the heartrate sensor");
-                    mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        if (requestCode == 1) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //granted
+                Log.i("permsGranted", "we have permission registering the heartrate sensor");
+                mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-                } else {
-                    //not granted
-                }
-                break;
-            default:
+            }
+            //Otherwise the request was not granted
+        }
+        else{
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -121,7 +117,6 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
         if(event.sensor.getType() == Sensor.TYPE_HEART_RATE)
         {
-            //String msg = "" + (int)event.values[0];
             currentHeartRate = (int) event.values[0];
             sTextView.setText("Target Heart Rate: " + targetHeartRate);
             cTextView.setText("Current Heart Rate: " + currentHeartRate);
