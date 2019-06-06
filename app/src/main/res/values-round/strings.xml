@@ -3,4 +3,5 @@
     <string name="select_hr">Select Heart Rate</string>
     <string name="next">NEXT</string>
     <string name="current_hr">Current Heart Rate: </string>
+    <string name="turn_on">Activated</string>
 </resources>

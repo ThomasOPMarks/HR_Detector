@@ -23,6 +23,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     private int currentHeartRate;
     private SensorManager mSensorManager;
     private Sensor mHeartRateSensor;
+    private boolean state = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         cTextView = findViewById(R.id.current);
 
         //Initialize text to display current HR and set to invisible
-        cTextView.setText("Current Heart Rate: ...");
+        cTextView.setText("Current HR: ... - Flaccid");
         cTextView.setVisibility(View.INVISIBLE);
 
         //Initialize HR sensor, and sensor manager
@@ -70,7 +71,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
             public void onClick(View v) {
                 //If the user has clicked here, the target HR is set up, show current HR
                 if(numClicked == 0){
-                    sTextView.setText("Target Heart Rate: " + targetHeartRate);
+                    sTextView.setText("Target HR: " + targetHeartRate);
                     cTextView.setVisibility(View.VISIBLE);
                     np.setVisibility(View.INVISIBLE);
                     next.setText("BACK");
@@ -118,17 +119,35 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         if(event.sensor.getType() == Sensor.TYPE_HEART_RATE)
         {
             currentHeartRate = (int) event.values[0];
-            sTextView.setText("Target Heart Rate: " + targetHeartRate);
-            cTextView.setText("Current Heart Rate: " + currentHeartRate);
+
             sTextView.setVisibility(View.VISIBLE);
             cTextView.setVisibility(View.VISIBLE);
-            if (currentHeartRate >= targetHeartRate) { //Target HR has been achieved
-                //Display message showing Target HR is reached, in the future send signal for Bluno to turn on
-                cTextView.setText("Signal bluetooth device that the mood has been achieved!!");
-                currentHeartRate = 0;
-                //Turn off HR monitor to save battery
-                mSensorManager.unregisterListener(this,mHeartRateSensor);
+            boolean currentState = currentHeartRate >= targetHeartRate;
+            //If the state has changed a message needs to be sent
+            if(currentState != this.state){
+                //if the erection needs to be turned on send the message to do so
+                if(currentState){
+                    //TODO Send a message indicating the erection to turn on
+
+
+                }else { //otherwise it is the message to turn the erection off
+                    //TODO Send a message indicating the erection to turn off
+
+                }
             }
+            //Now update the display based on the value of the heart monitor
+            if(currentState){//if in the erect state
+                sTextView.setText("Target HR: " + targetHeartRate + " - Erect");
+                cTextView.setText("Current HR: " + currentHeartRate);
+            }
+            else{//if in the passive state
+                sTextView.setText("Target HR: " + targetHeartRate + " - Flaccid");
+                cTextView.setText("Current HR: " + currentHeartRate);
+            }
+            //update the state to match the current state
+            this.state = currentState;
+
+
         }
 
     }
